@@ -16,5 +16,4 @@ RUN composer install --no-dev --optimize-autoloader
 RUN chmod -R 775 storage
 RUN chmod -R 775 bootstrap/cache
 
-# Start server and run migrations
-CMD php artisan migrate --force && php -S 0.0.0.0:${PORT:-10000} -t public
+CMD sh -c "php artisan migrate --force && php -S 0.0.0.0:$PORT -t public"
