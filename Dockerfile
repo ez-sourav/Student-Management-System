@@ -12,4 +12,15 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-CMD php artisan migrate --force && php -S 0.0.0.0:$PORT -t public
+# Fix Laravel permissions
+RUN chmod -R 775 storage
+RUN chmod -R 775 bootstrap/cache
+
+# Clear caches
+RUN php artisan config:clear
+RUN php artisan cache:clear
+RUN php artisan route:clear
+RUN php artisan view:clear
+
+# Start server
+CMD php artisan migrate --force && php -S 0.0.0.0:${PORT:-10000} -t public
