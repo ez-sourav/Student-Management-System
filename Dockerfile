@@ -6,14 +6,19 @@ RUN apt-get update && apt-get install -y \
     git unzip libpq-dev libzip-dev zip curl \
     && docker-php-ext-install pdo pdo_pgsql zip
 
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# Copy project
 COPY . .
 
+# Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 # Fix Laravel permissions
-RUN chmod -R 775 storage
-RUN chmod -R 775 bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
 
-CMD sh -c "php artisan migrate --force && php -S 0.0.0.0:$PORT -t public"
+# Render expects a port to be exposed
+EXPOSE 10000
+
+CMD php -S 0.0.0.0:$PORT -t public
