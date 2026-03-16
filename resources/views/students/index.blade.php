@@ -128,7 +128,10 @@ class="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 tran
         </table>
 
         </div>
-
+        
+        <div class="p-4  flex justify-end">
+    {{ $students->links() }}
+    </div>
     </div>
 
 </div>

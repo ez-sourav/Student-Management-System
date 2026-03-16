@@ -14,11 +14,17 @@ class StudentController extends Controller
 
     $students = Student::with('course')
         ->when($search, function ($query) use ($search) {
-            $query->where('name', 'like', "%{$search}%")
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone', 'like', "%{$search}%");
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhereHas('course', function ($courseQuery) use ($search) {
+                      $courseQuery->where('course_name', 'like', "%{$search}%");
+                  });
+            });
         })
-        ->get();
+        ->paginate(5)
+        ->withQueryString();
 
     return view('students.index', compact('students'));
 }
@@ -74,8 +80,8 @@ class StudentController extends Controller
             'course_id' => $request->course_id
         ]);
 
-       return redirect()->route('students.index')
-                     ->with('success', 'Student updated successfully!');
+        return redirect()->route('students.index')
+            ->with('success', 'Student updated successfully!');
     }
 
     public function destroy($id)
@@ -83,6 +89,6 @@ class StudentController extends Controller
         $student = Student::findOrFail($id);
         $student->delete();
 
-        return redirect()->route('students.index') ->with('success', 'Student deleted successfully!');
+        return redirect()->route('students.index')->with('success', 'Student deleted successfully!');
     }
 }
