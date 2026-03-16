@@ -20,23 +20,40 @@ Students
 
 <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
 
-<!-- Search -->
-<form method="GET" action="{{ route('students.index') }}" class="flex w-full sm:w-auto">
+<form method="GET" action="{{ route('students.index') }}" class="flex gap-2">
 
+<!-- Search -->
 <input type="text"
        name="search"
        value="{{ request('search') }}"
        placeholder="Search students..."
-       class="border border-gray-300 rounded-l px-4 py-2 w-full outline-none focus:outline-none focus:ring-0 focus:border-gray-300">
+       class="border border-gray-300 rounded px-4 py-2 w-full outline-none">
+
+<!-- Course Filter -->
+<select name="course"
+        onchange="this.form.submit()"
+        class="border border-gray-300 rounded px-3 py-2">
+
+<option value="">All Courses</option>
+
+@foreach($courses as $course)
+
+<option value="{{ $course->id }}"
+{{ request('course') == $course->id ? 'selected' : '' }}>
+{{ $course->course_name }}
+</option>
+
+@endforeach
+
+</select>
 
 <button type="submit"
-        class="bg-gray-800 text-white px-4 rounded-r">
-        <i class="fa-solid fa-magnifying-glass"></i>
+class="bg-gray-800 text-white px-4 rounded">
+<i class="fa-solid fa-magnifying-glass"></i>
 </button>
 
 </form>
 
-<!-- Add Student Button -->
 <a href="{{ route('students.create') }}"
 class="bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition text-center">
 <i class="fa-solid fa-plus"></i> Add Student

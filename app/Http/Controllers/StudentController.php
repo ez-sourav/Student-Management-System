@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 
 class StudentController extends Controller
 {
-    public function index(Request $request)
+   public function index(Request $request)
 {
     $search = $request->search;
+    $course = $request->course;
 
     $students = Student::with('course')
         ->when($search, function ($query) use ($search) {
@@ -23,10 +24,18 @@ class StudentController extends Controller
                   });
             });
         })
+
+        // COURSE FILTER
+        ->when($course, function ($query) use ($course) {
+            $query->where('course_id', $course);
+        })
+
         ->paginate(5)
         ->withQueryString();
 
-    return view('students.index', compact('students'));
+    $courses = Course::all();
+
+    return view('students.index', compact('students','courses'));
 }
 
     public function create()
