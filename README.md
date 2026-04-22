@@ -6,9 +6,6 @@
 
 A simple Student Management System built using Laravel. This project allows users to manage students and courses.
 
-## Live Demo
-https://student-management-system-production-e011.up.railway.app/
-
 ## Features
 - Add students
 - Edit students
